@@ -1,0 +1,53 @@
+name: New projector
+description: Propose a projector that reduces a payload type LeanRigor does not handle well yet
+labels: [projector, good first issue]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read [docs/extensions/projector-guide.md](../../docs/extensions/projector-guide.md)
+        first. A projector is the most self-contained thing you can own here.
+  - type: input
+    id: payload
+    attributes:
+      label: Payload type
+      description: What does this projector handle? Be specific.
+      placeholder: JUnit XML test reports
+    validations: { required: true }
+  - type: textarea
+    id: signal
+    attributes:
+      label: What a reader actually needs from this payload
+      description: The two or three things worth keeping. This determines the design.
+      placeholder: |
+        - which tests failed, with their assertion message
+        - total counts
+        - not: the 500 passing test names
+    validations: { required: true }
+  - type: textarea
+    id: measurement
+    attributes:
+      label: Measured reduction on a realistic fixture
+      description: Baseline bytes, projected bytes, and where the fixture came from.
+    validations: { required: true }
+  - type: textarea
+    id: loss
+    attributes:
+      label: Loss policy per code path
+      description: lossless, reversible-lossy or summary-only, and when each applies.
+    validations: { required: true }
+  - type: checkboxes
+    id: contract
+    attributes:
+      label: Acceptance contract
+      options:
+        - label: I will provide golden fixture tests
+          required: true
+        - label: The projection stays inside its byte budget, with a test
+          required: true
+        - label: Over-budget output is still valid, with a test
+          required: true
+        - label: originalHandle survives every path, with a test
+          required: true
+        - label: It is deterministic, with a test
+          required: true

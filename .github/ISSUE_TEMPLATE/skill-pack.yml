@@ -1,0 +1,61 @@
+name: New skill pack
+description: Propose an evaluated skill for a domain LeanRigor does not cover
+labels: [skill]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read [docs/extensions/skill-pack-guide.md](../../docs/extensions/skill-pack-guide.md).
+        A skill without evaluation cases will not be merged — not because of
+        bureaucracy, but because nobody can tell whether it helps.
+  - type: input
+    id: name
+    attributes:
+      label: Skill name
+      placeholder: incident-response
+    validations: { required: true }
+  - type: textarea
+    id: trigger
+    attributes:
+      label: Trigger description
+      description: |
+        When it applies, and by implication when it does not. Paste the exact
+        `description` you would put in the frontmatter.
+    validations: { required: true }
+  - type: textarea
+    id: decisions
+    attributes:
+      label: The decisions it forces
+      description: |
+        Branching rules and required outputs, not topics. "Consider reliability"
+        earns nothing; "state the retry budget, or record that there is none"
+        changes behaviour.
+    validations: { required: true }
+  - type: input
+    id: budget
+    attributes:
+      label: Declared context budget, in tokens
+    validations: { required: true }
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Provenance
+      description: |
+        What influenced this, and whether anything was copied. Copied or adapted
+        material needs a source URL, a license and a retained notice.
+    validations: { required: true }
+  - type: checkboxes
+    id: contract
+    attributes:
+      label: Acceptance contract
+      options:
+        - label: At least five positive evaluation cases
+          required: true
+        - label: At least three non-trigger cases
+          required: true
+        - label: Deterministic artifact checks, no model judging prose
+          required: true
+        - label: An ablation section list naming real headings
+          required: true
+        - label: A license, and a provenance record
+          required: true

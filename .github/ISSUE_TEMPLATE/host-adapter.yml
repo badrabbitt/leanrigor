@@ -1,0 +1,49 @@
+name: New host adapter
+description: Propose support for a coding-agent host LeanRigor does not install into yet
+labels: [host-adapter]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read [docs/extensions/host-adapter-guide.md](../../docs/extensions/host-adapter-guide.md).
+        The round-trip requirement is strict: uninstall must restore the original
+        bytes.
+  - type: input
+    id: host
+    attributes:
+      label: Host
+      placeholder: Gemini CLI
+    validations: { required: true }
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration files and format
+      description: Exact paths, and the format. Can it be edited losslessly?
+    validations: { required: true }
+  - type: textarea
+    id: capabilities
+    attributes:
+      label: Capabilities this host genuinely has
+      description: |
+        mcp-servers, project-skills, user-skills, hooks. Only list what it really
+        supports — an install that silently does nothing is worse than none.
+    validations: { required: true }
+  - type: textarea
+    id: detection
+    attributes:
+      label: How to detect it
+      description: Which files or directories prove the host is installed?
+    validations: { required: true }
+  - type: checkboxes
+    id: contract
+    attributes:
+      label: Acceptance contract
+      options:
+        - label: planInstall writes nothing, with a before/after snapshot test
+          required: true
+        - label: Unrelated settings survive the install, with a test
+          required: true
+        - label: Install then uninstall restores the original bytes, with a test
+          required: true
+        - label: Capabilities are declared honestly, with a test on what is not claimed
+          required: true
