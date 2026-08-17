@@ -21,3 +21,4 @@ export type {
   ReleaseGateThresholds,
   GateCheck,
 } from "./release-gate.js";
+export * from "./skill-eval/index.js";

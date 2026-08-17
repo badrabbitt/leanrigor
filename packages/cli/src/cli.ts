@@ -128,6 +128,22 @@ export async function runCli(argv: string[], io: CliIo = defaultIo): Promise<num
       });
     }
     case "benchmark": {
+      if (flags.suite === "skills") {
+        const { runSkillEval } = await import("./commands/skill-eval.js");
+        const skills = flagAsList(flags.skill);
+        return runSkillEval(io, {
+          ...(skills ? { skills } : {}),
+          ...(typeof flags.model === "string" ? { model: flags.model } : {}),
+          ...(typeof flags["codex-home"] === "string" ? { codexHome: flags["codex-home"] } : {}),
+          ...(typeof flags["work-dir"] === "string" ? { workRoot: flags["work-dir"] } : {}),
+          ...(typeof flags.json === "string" ? { json: flags.json } : {}),
+          ...(typeof flags.markdown === "string" ? { markdown: flags.markdown } : {}),
+          ...(flagAsBoolean(flags.ablation) ? { ablation: true } : {}),
+          ...(flagAsList(flags.section) ? { ablationSections: flagAsList(flags.section)! } : {}),
+          ...(flags.baseline === false ? { baseline: false } : {}),
+          ...(flags["non-trigger"] === false ? { nonTrigger: false } : {}),
+        });
+      }
       const { runBenchmark } = await import("./commands/benchmark.js");
       return runBenchmark(io, {
         ...(typeof flags.evals === "string" ? { evalsRoot: flags.evals } : {}),

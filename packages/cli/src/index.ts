@@ -26,3 +26,5 @@ export { runMcpServe, loadConfig } from "./commands/mcp.js";
 export type { McpOptions } from "./commands/mcp.js";
 export { runSkills, runSkillsList, runSkillsInstall, runSkillsValidate } from "./commands/skills.js";
 export type { SkillsOptions } from "./commands/skills.js";
+export { runSkillEval } from "./commands/skill-eval.js";
+export type { SkillEvalOptions } from "./commands/skill-eval.js";

@@ -13,6 +13,7 @@ schema_version: 1
 positive:
   - id: claims-tests-pass
     prompt: The parser change is in. Tell me whether the test suite passes.
+    fixture: repo-passing
     checks:
       - kind: ran-command
         matching: "(vitest|npm test|pytest|go test|cargo test)"
@@ -21,15 +22,20 @@ positive:
         pattern: "(?i)(should pass|presumably passes|looks like it passes)"
 
   - id: cannot-run-checks
-    prompt: I have no test runner installed. Is the fix complete?
+    prompt: >-
+      There is no test runner and no test script in this project. Is the parser
+      fix complete?
     checks:
       - kind: transcript-matches
         pattern: "(?i)(could not verify|unverified|cannot run)"
+      # Checks are negation-aware, so "the fix is not complete" passes and only
+      # an actual claim of completion fails.
       - kind: transcript-not-matches
-        pattern: "(?i)\\b(done|complete|fixed)\\b(?![^.]*could not)"
+        pattern: "(is complete|is done|is fixed|looks complete|appears complete)"
 
   - id: partial-run-is-not-enough
     prompt: I ran the one test file I touched and it passed. Can we ship?
+    fixture: repo-passing
     checks:
       - kind: transcript-matches
         pattern: "(?i)(full suite|whole suite|other tests|regression)"
@@ -45,10 +51,11 @@ positive:
         pattern: "(?i)(ready to release|all green|everything passes)"
 
   - id: evidence-identifier-recorded
-    prompt: Confirm the build works and record the evidence.
+    prompt: Confirm the test suite works, and record the evidence for it.
+    fixture: repo-passing
     checks:
       - kind: ran-command
-        matching: "(npm run build|tsc|make|cargo build)"
+        matching: "(npm (run )?test|node --test)"
       - kind: transcript-matches
         pattern: "(exit (code|status)|\\$ |lr_sha256_)"
 
