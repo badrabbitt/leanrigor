@@ -11,6 +11,9 @@
       "path": "packages/result-store"
     },
     {
+      "path": "packages/mcp-gateway"
+    },
+    {
       "path": "packages/cli"
     }
   ]

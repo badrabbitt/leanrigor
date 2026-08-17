@@ -1,0 +1,50 @@
+# Baseline for the official MCP conformance suite.
+#
+# LeanRigor's MCP server exposes exactly four tools — search_tools,
+# describe_tool, invoke_tool and fetch_result — and advertises only the `tools`
+# capability. Every scenario listed here tests a capability LeanRigor does not
+# implement, or a tool that exists only in the suite's reference server. None of
+# them is a defect in LeanRigor.
+#
+# Everything NOT listed here must pass. Adding a line to this file is a
+# deliberate scope decision and belongs in a reviewed pull request; if a
+# scenario starts passing, the suite reports the entry as stale and it must be
+# removed.
+#
+# Currently passing (enforced): server-initialize, ping, tools-list,
+# tools-call-simple-text, tools-call-error, server-sse-multiple-streams,
+# dns-rebinding-protection.
+#
+# Re-run with:
+#   npm run conformance
+
+server:
+  # Capabilities LeanRigor deliberately does not advertise or implement.
+  - logging-set-level
+  - completion-complete
+  - resources-list
+  - resources-read-text
+  - resources-read-binary
+  - resources-templates-read
+  - resources-subscribe
+  - resources-unsubscribe
+  - prompts-list
+  - prompts-get-simple
+  - prompts-get-with-args
+  - prompts-get-embedded-resource
+  - prompts-get-with-image
+  - elicitation-sep1034-defaults
+  - elicitation-sep1330-enums
+
+  # Scenarios that call named tools from the suite's reference server. LeanRigor
+  # returns text projections and handles; it never emits image, audio or
+  # embedded-resource content, because those bytes belong in the result store
+  # rather than in model context.
+  - tools-call-image
+  - tools-call-audio
+  - tools-call-embedded-resource
+  - tools-call-mixed-content
+  - tools-call-with-logging
+  - tools-call-with-progress
+  - tools-call-sampling
+  - tools-call-elicitation
