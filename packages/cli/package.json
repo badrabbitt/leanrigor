@@ -1,0 +1,42 @@
+{
+  "name": "leanrigor",
+  "version": "0.1.0",
+  "description": "Less context. Full engineering rigor. A local-first, cross-agent engineering harness.",
+  "keywords": [
+    "ai",
+    "agent",
+    "mcp",
+    "context",
+    "tokens",
+    "claude-code",
+    "codex",
+    "developer-tools"
+  ],
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "leanrigor": "./dist/bin.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}

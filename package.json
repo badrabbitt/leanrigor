@@ -1,0 +1,27 @@
+{
+  "name": "leanrigor-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "LeanRigor — Less context. Full engineering rigor.",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "typecheck": "tsc --build --force",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "tsc --build --clean"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}
