@@ -5,6 +5,9 @@
       "path": "packages/core"
     },
     {
+      "path": "packages/tokenleaf-engine"
+    },
+    {
       "path": "packages/cli"
     }
   ]
