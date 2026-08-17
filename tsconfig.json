@@ -26,6 +26,9 @@
       "path": "packages/host-codex"
     },
     {
+      "path": "packages/energy-estimator"
+    },
+    {
       "path": "packages/cli"
     }
   ]

@@ -1,0 +1,75 @@
+{
+  "methodologyVersion": "v1",
+  "retrievedAt": "2026-08-17",
+  "unit": "Wh",
+  "notice": "These are published ranges from third-party literature, not measurements of any provider's datacenter. LeanRigor cannot observe provider hardware, batching, utilization or cooling, so every figure derived from this file is an estimate with a stated range and must be presented as such.",
+  "sources": [
+    {
+      "id": "tokens-to-watt-hours",
+      "title": "From Tokens to Watt-hours",
+      "url": "https://arxiv.org/abs/2607.26571",
+      "retrievedAt": "2026-08-17",
+      "usedFor": "separating prefill from decode; exposing hardware assumptions rather than folding them into one constant"
+    },
+    {
+      "id": "energy-use-of-ai-inference",
+      "title": "Energy Use of AI Inference",
+      "url": "https://arxiv.org/abs/2509.20241",
+      "retrievedAt": "2026-08-17",
+      "usedFor": "bottom-up estimates require throughput, utilization and PUE assumptions; range width reflects those unknowns"
+    },
+    {
+      "id": "compression-paradox",
+      "title": "The Compression Paradox in LLM Inference",
+      "url": "https://arxiv.org/abs/2603.23528",
+      "retrievedAt": "2026-08-17",
+      "usedFor": "token reduction is not a reliable energy proxy; compression can expand output and increase total energy"
+    },
+    {
+      "id": "green-ai-software-development",
+      "title": "Towards Green AI for Software Development",
+      "url": "https://arxiv.org/abs/2602.05712",
+      "retrievedAt": "2026-08-17",
+      "usedFor": "prefill volume affects decoding energy; suppressing unnecessary output can reduce energy"
+    },
+    {
+      "id": "gsf-sci",
+      "title": "Green Software Foundation — Software Carbon Intensity",
+      "url": "https://github.com/Green-Software-Foundation/sci",
+      "retrievedAt": "2026-08-17",
+      "usedFor": "functional unit, disclosure of assumptions, and the requirement that grid intensity be supplied rather than assumed"
+    }
+  ],
+  "modelClasses": {
+    "small": {
+      "description": "Roughly under 10B active parameters.",
+      "prefillWhPerThousandTokens": { "low": 0.002, "high": 0.02 },
+      "decodeWhPerThousandTokens": { "low": 0.02, "high": 0.2 }
+    },
+    "medium": {
+      "description": "Roughly 10B to 100B active parameters.",
+      "prefillWhPerThousandTokens": { "low": 0.01, "high": 0.1 },
+      "decodeWhPerThousandTokens": { "low": 0.1, "high": 1.0 }
+    },
+    "large": {
+      "description": "Roughly over 100B active parameters, or an undisclosed frontier model.",
+      "prefillWhPerThousandTokens": { "low": 0.03, "high": 0.4 },
+      "decodeWhPerThousandTokens": { "low": 0.3, "high": 4.0 }
+    },
+    "unknown": {
+      "description": "Model family not disclosed. The range spans every class above, because narrowing it would be invention rather than estimation.",
+      "prefillWhPerThousandTokens": { "low": 0.002, "high": 0.4 },
+      "decodeWhPerThousandTokens": { "low": 0.02, "high": 4.0 }
+    }
+  },
+  "infrastructureOverhead": {
+    "description": "Multiplier covering power usage effectiveness, networking and idle capacity. Applied to the compute estimate.",
+    "low": 1.1,
+    "high": 1.8
+  },
+  "cacheReadDiscount": {
+    "description": "Fraction of prefill energy attributed to a cache-read token. Cache reads still cost work; the discount is deliberately conservative because the true figure is not published.",
+    "low": 0.1,
+    "high": 0.5
+  }
+}
