@@ -11,14 +11,19 @@
       "default": "./dist/index.js"
     }
   },
-  "files": ["dist"],
-  "engines": { "node": ">=22" },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "tsc --build",
     "test": "vitest run"
   },
   "dependencies": {
     "@leanrigor/core": "0.1.0",
+    "gpt-tokenizer": "^3.4.0",
     "zod": "^4.1.12"
   }
 }
