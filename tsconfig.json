@@ -17,6 +17,9 @@
       "path": "packages/workflow-runtime"
     },
     {
+      "path": "packages/skill-router"
+    },
+    {
       "path": "packages/cli"
     }
   ]

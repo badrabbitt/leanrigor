@@ -1,0 +1,4 @@
+artifact: skills/copied-without-notice
+implementation: adapted
+copied_files:
+  - upstream/helper.md

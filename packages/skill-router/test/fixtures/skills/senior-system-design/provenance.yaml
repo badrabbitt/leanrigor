@@ -1,0 +1,8 @@
+artifact: skills/senior-system-design
+implementation: independently-authored
+influences:
+  - project: obra/superpowers
+    license: MIT
+    concepts: [design-gate, verification-gate]
+copied_files: []
+reviewed_by: maintainer

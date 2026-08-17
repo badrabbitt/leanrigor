@@ -1,0 +1,5 @@
+schema_version: 1
+skill: product-brainstorming
+version: 0.1.0
+risk_levels: [medium, high, critical]
+context_budget_tokens: 3000

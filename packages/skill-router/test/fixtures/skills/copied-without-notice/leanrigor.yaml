@@ -1,0 +1,7 @@
+schema_version: 1
+skill: copied-without-notice
+version: 0.1.0
+risk_levels: [low]
+context_budget_tokens: 1000
+provenance:
+  manifest: provenance.yaml

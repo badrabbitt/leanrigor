@@ -1,0 +1,11 @@
+schema_version: 1
+skill: senior-system-design
+version: 0.1.0
+risk_levels: [medium, high, critical]
+context_budget_tokens: 8000
+outputs:
+  - architecture.md
+requires:
+  - product-brainstorming
+provenance:
+  manifest: provenance.yaml

@@ -1,0 +1,6 @@
+schema_version: 1
+skill: beta
+version: 0.1.0
+risk_levels: [low]
+context_budget_tokens: 500
+requires: [alpha]

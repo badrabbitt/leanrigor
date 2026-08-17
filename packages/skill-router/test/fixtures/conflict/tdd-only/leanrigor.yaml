@@ -1,0 +1,6 @@
+schema_version: 1
+skill: tdd-only
+version: 0.1.0
+risk_levels: [low, medium]
+context_budget_tokens: 1000
+mandatory_workflow: test-first
