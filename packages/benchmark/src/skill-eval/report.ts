@@ -12,6 +12,8 @@ export interface SkillUplift {
   readonly routingTotal: number;
   /** Runs where the provider rejected the request; excluded from the rates. */
   readonly agentFailures: number;
+  /** Repetitions per cell. At 1, treat small differences as noise. */
+  readonly repetitions: number;
 }
 
 export interface AblationFinding {
@@ -50,6 +52,7 @@ export function summarize(outcomes: readonly CaseOutcome[]): SkillUplift[] {
       routingPassed: routing.passed,
       routingTotal: routing.total,
       agentFailures: forSkill.filter((outcome) => !outcome.agentOk).length,
+      repetitions: new Set(forSkill.map((outcome) => outcome.repetition)).size,
     };
   });
 }
@@ -106,8 +109,8 @@ export function renderSkillReport(
     "",
     `Agent: ${agent.name}, model ${agent.model}`,
     "",
-    "| Skill | Baseline | With skill | Uplift | Non-trigger |",
-    "|---|---|---|---|---|",
+    "| Skill | Baseline | With skill | Uplift | Non-trigger | Reps |",
+    "|---|---|---|---|---|---|",
   ];
 
   for (const uplift of uplifts) {
@@ -116,7 +119,16 @@ export function renderSkillReport(
       `| ${uplift.skill} | ${uplift.baselinePassed}/${uplift.baselineTotal} | `
       + `${uplift.withSkillPassed}/${uplift.withSkillTotal} | `
       + `${sign}${uplift.upliftPoints.toFixed(1)} points | `
-      + `${uplift.routingPassed}/${uplift.routingTotal} |`,
+      + `${uplift.routingPassed}/${uplift.routingTotal} | ${uplift.repetitions} |`,
+    );
+  }
+
+  if (uplifts.some((uplift) => uplift.repetitions < 2)) {
+    lines.push(
+      "",
+      "Single repetition: identical re-runs of this suite have moved a skill's",
+      "uplift by 60 points, so treat any small difference here as noise and",
+      "re-run with --repeat before quoting it.",
     );
   }
 

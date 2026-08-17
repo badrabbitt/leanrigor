@@ -31,6 +31,8 @@ export interface CaseOutcome {
   readonly checks: readonly CheckResult[];
   readonly agentOk: boolean;
   readonly agentError?: string;
+  /** 0-based repetition index. Single runs of an agent are noisy. */
+  readonly repetition: number;
   readonly durationMs: number;
   /**
    * What the agent actually produced. Kept so a failed check can be audited —
@@ -79,6 +81,29 @@ export function removeSection(body: string, heading: string): string {
   return body.replace(pattern, "").replace(/\n{3,}/g, "\n\n").trim();
 }
 
+/**
+ * Neutral instructions for the baseline condition.
+ *
+ * If the checks require a file, the baseline is told to write that file — and
+ * nothing else. Without this the comparison mostly measures "was this condition
+ * told to write a file", and reports an uplift the skill's content did not
+ * earn. The baseline is never told what to put in it; that is exactly what the
+ * skill is being tested on.
+ */
+export function baselineInstructions(testCase: EvalCase): string | undefined {
+  const artifact = testCase.checks.find(
+    (check) =>
+      (check.kind === "artifact-exists"
+        || check.kind === "artifact-has-sections"
+        || check.kind === "artifact-matches"
+        || check.kind === "artifact-section-matches"
+        || check.kind === "artifact-section-list-min")
+      && typeof check.path === "string",
+  );
+  if (!artifact?.path) return undefined;
+  return `Write your answer to a file named \`${artifact.path}\` in the working directory.`;
+}
+
 export interface RunnerDeps {
   readonly agent: EvalAgent;
   readonly skillsRoot: string;
@@ -115,8 +140,9 @@ async function evaluate(
   instructions: string | undefined,
   loadedSkills: readonly string[],
   removedSection?: string,
+  repetition = 0,
 ): Promise<CaseOutcome> {
-  const key = `${suite.skill}-${testCase.id}-${condition}${removedSection ? `-${removedSection}` : ""}`;
+  const key = `${suite.skill}-${testCase.id}-${condition}${removedSection ? `-${removedSection}` : ""}-r${repetition}`;
   const workDir = await prepareWorkDir(deps, key, testCase.fixture);
   const startedAt = Date.now();
 
@@ -149,6 +175,7 @@ async function evaluate(
     agentOk: output.ok,
     ...(output.error ? { agentError: output.error } : {}),
     durationMs: Date.now() - startedAt,
+    repetition,
     transcript: output.transcript,
     commands: output.commands,
     ...(output.usage ? { usage: output.usage } : {}),
@@ -162,6 +189,15 @@ export interface RunSuiteOptions {
   readonly includeAblation?: boolean;
   /** Restrict ablation to these sections, to bound cost. */
   readonly ablationSections?: readonly string[];
+  /**
+   * How many times to run each positive case per condition.
+   *
+   * One run per cell is not a measurement. Running this suite three times with
+   * an identical configuration produced +40, +20 and -20 points for the same
+   * skill, so anything below roughly twenty points at n=1 is indistinguishable
+   * from noise.
+   */
+  readonly repeat?: number;
 }
 
 /**
@@ -185,15 +221,32 @@ export async function runSkillSuite(
 
   const outcomes: CaseOutcome[] = [];
 
-  if (options.includeBaseline !== false) {
-    for (const testCase of suite.positive) {
-      outcomes.push(await evaluate(deps, suite, testCase, "baseline", undefined, []));
-    }
-  }
+  const repeat = Math.max(1, options.repeat ?? 1);
 
-  if (options.includeWithSkill !== false) {
-    for (const testCase of suite.positive) {
-      outcomes.push(await evaluate(deps, suite, testCase, "with-skill", body, [skill]));
+  for (let repetition = 0; repetition < repeat; repetition += 1) {
+    if (options.includeBaseline !== false) {
+      for (const testCase of suite.positive) {
+        outcomes.push(
+          await evaluate(
+            deps,
+            suite,
+            testCase,
+            "baseline",
+            baselineInstructions(testCase),
+            [],
+            undefined,
+            repetition,
+          ),
+        );
+      }
+    }
+
+    if (options.includeWithSkill !== false) {
+      for (const testCase of suite.positive) {
+        outcomes.push(
+          await evaluate(deps, suite, testCase, "with-skill", body, [skill], undefined, repetition),
+        );
+      }
     }
   }
 
@@ -215,6 +268,7 @@ export async function runSkillSuite(
         checks,
         agentOk: true,
         durationMs: 0,
+        repetition: 0,
         transcript: selected.transcript,
         commands: [],
       });

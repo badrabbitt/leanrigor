@@ -70,10 +70,22 @@ export function extractSection(markdown: string, heading: string): string | unde
   return match ? match[2] : undefined;
 }
 
-function countListItems(section: string): number {
-  return section
-    .split("\n")
-    .filter((line) => /^\s*(?:[-*+]|\d+[.)])\s+\S/.test(line)).length;
+/**
+ * Counts enumerated items in a section.
+ *
+ * Bullets and numbers count, and so does a labelled lead-in like
+ * "Do nothing: ..." or "**Smallest change** — ...". The claim being checked is
+ * "at least N alternatives were given", and a writer who used labelled
+ * paragraphs has given them. Counting only markdown bullets would test the
+ * syntax rather than the substance.
+ */
+export function countListItems(section: string): number {
+  const lines = section.split("\n");
+  const bullets = lines.filter((line) => /^\s*(?:[-*+]|\d+[.)])\s+\S/.test(line)).length;
+  const labelled = lines.filter((line) =>
+    /^\s*(?:\*\*|__)?[A-Z][^.!?:\n]{2,60}(?:\*\*|__)?\s*[:\u2014-]\s+\S/.test(line),
+  ).length;
+  return Math.max(bullets, labelled);
 }
 
 /**

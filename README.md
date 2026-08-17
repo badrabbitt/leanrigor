@@ -48,9 +48,28 @@ Per-case figures, the raw result and the release-gate verdict are in
 count and the measurement mode behind it.
 
 **What this does not claim.** These cases measure what LeanRigor's own
-transformations do to a payload — no model is involved. The skill-uplift claims
-are not yet evidence-backed; [`evals/README.md`](evals/README.md) says exactly
-which runs have not been done.
+transformations do to a payload — no model is involved.
+
+## Skill evaluation
+
+The skills have now been evaluated against a real model (Codex CLI, `gpt-5.5`),
+baseline versus with-skill, with deterministic checks:
+
+| Skill | Baseline | With skill | Uplift | Reps |
+|---|---|---|---|---|
+| senior-system-design | 2/6 | 6/6 | +66.7 points | 1 |
+| product-brainstorming | 0/5 | 4/5 | +80.0 points | 1 |
+| verification | 16/20 | 18/20 | +10.0 points | 4 |
+
+All three trigger descriptions are bounded: the router selected none of them on
+any of the nine non-trigger prompts.
+
+**Do not quote those numbers without the caveat.** Running the `verification`
+suite three times on an unchanged configuration produced +40, +20 and −20
+points. A 60-point swing means anything below roughly twenty points at n=1 is
+noise, and the two large results above are single runs. Full write-up, including
+the five defects found in the evaluation harness itself and the two found in the
+skills, is in [docs/benchmarks/skill-eval.md](docs/benchmarks/skill-eval.md).
 
 ## What it does
 
@@ -108,7 +127,13 @@ append-only audit record under `.leanrigor/`.
 
 Stated plainly, because a harness that overstates itself is worse than none:
 
-- The skill-uplift evaluations need model credentials and **have not been run**.
+- Two of the three skill-uplift results are **n=1**, and run-to-run variance on
+  this suite has reached 60 points. Re-run with `--repeat` before relying on them.
+- **Four of the five `verification` cases do not discriminate** — the baseline
+  passes them every time, so they measure nothing. That suite needs harder cases.
+- **Ablation has not been run.** No section of any skill has yet been shown to
+  earn the context it costs.
+- Every skill number comes from one CLI and one model.
 - The benchmark's `gateway+workflow` and `gateway+workflow+skill` conditions are
   not implemented yet; only `baseline` and `gateway` run today.
 - Risk classification is regex-and-path based. It is deliberately conservative

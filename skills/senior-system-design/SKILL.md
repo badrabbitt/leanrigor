@@ -9,9 +9,10 @@ license: Apache-2.0
 A design is a set of decisions with stated consequences. Prose that describes
 components without deciding anything is not a design.
 
-Work through the sections below. Each one must end in a decision or an
-explicitly recorded unknown. `references/nfr-checklist.md` holds the detailed
-prompts; consult it when a section feels thin.
+Write the design to `architecture.md`, one section per heading below. Each
+section must end in a decision or an explicitly recorded unknown.
+`references/nfr-checklist.md` holds the detailed prompts; consult it when a
+section feels thin.
 
 ## 1. Functional requirements
 What the system must do, as capabilities a caller can invoke. Number them so the

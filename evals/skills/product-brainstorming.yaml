@@ -34,7 +34,7 @@ positive:
       - kind: artifact-section-matches
         path: product-brief.md
         section: Validation
-        pattern: "(?i)(would show it did not|fail|disconfirm|negative)"
+        pattern: "(did not work|would show it did not|does not work|disconfirm|fail|negative)"
 
   - id: names-what-is-out-of-scope
     prompt: Let's build offline mode.

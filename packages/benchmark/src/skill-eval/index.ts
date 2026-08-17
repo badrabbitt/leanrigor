@@ -1,4 +1,4 @@
-export { runChecks, runCheck, extractSection, looksLikeCommandOutput, compilePattern, everyMatchNegated } from "./checks.js";
+export { runChecks, runCheck, extractSection, looksLikeCommandOutput, compilePattern, everyMatchNegated, countListItems } from "./checks.js";
 export type { CheckSpec, CheckResult, RunArtifacts } from "./checks.js";
 export { CodexAgent, parseCodexStream } from "./agent.js";
 export type {
@@ -9,7 +9,13 @@ export type {
   TokenUsage,
   ParsedStream,
 } from "./agent.js";
-export { runSkillSuite, parseSuite, skillBody, removeSection } from "./runner.js";
+export {
+  runSkillSuite,
+  parseSuite,
+  skillBody,
+  removeSection,
+  baselineInstructions,
+} from "./runner.js";
 export type {
   EvalCase,
   EvalSuite,

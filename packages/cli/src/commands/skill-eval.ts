@@ -24,6 +24,7 @@ export interface SkillEvalOptions {
   readonly ablationSections?: readonly string[];
   readonly baseline?: boolean;
   readonly nonTrigger?: boolean;
+  readonly repeat?: number;
 }
 
 /**
@@ -66,6 +67,7 @@ export async function runSkillEval(io: CliIo, options: SkillEvalOptions = {}): P
           includeNonTrigger: options.nonTrigger !== false,
           ...(options.ablation ? { includeAblation: true } : {}),
           ...(options.ablationSections ? { ablationSections: options.ablationSections } : {}),
+          ...(options.repeat ? { repeat: options.repeat } : {}),
         },
       )),
     );

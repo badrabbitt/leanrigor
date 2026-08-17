@@ -139,6 +139,7 @@ export async function runCli(argv: string[], io: CliIo = defaultIo): Promise<num
           ...(typeof flags.json === "string" ? { json: flags.json } : {}),
           ...(typeof flags.markdown === "string" ? { markdown: flags.markdown } : {}),
           ...(flagAsBoolean(flags.ablation) ? { ablation: true } : {}),
+          ...(typeof flags.repeat === "string" ? { repeat: Number(flags.repeat) } : {}),
           ...(flagAsList(flags.section) ? { ablationSections: flagAsList(flags.section)! } : {}),
           ...(flags.baseline === false ? { baseline: false } : {}),
           ...(flags["non-trigger"] === false ? { nonTrigger: false } : {}),

@@ -12,6 +12,8 @@ import {
   renderSkillReport,
   runCheck,
   skillBody,
+  countListItems,
+  baselineInstructions,
   summarize,
   type CaseOutcome,
   type RunArtifacts,
@@ -233,6 +235,65 @@ describe("everyMatchNegated", () => {
   });
 });
 
+describe("countListItems", () => {
+  it("counts markdown bullets", () => {
+    expect(countListItems("- one\n- two\n- three")).toBe(3);
+  });
+
+  it("counts numbered items", () => {
+    expect(countListItems("1. one\n2. two")).toBe(2);
+  });
+
+  it("counts labelled paragraphs, which are still enumerated alternatives", () => {
+    const section = [
+      "Do nothing: costs no build time, but leaves the gap unchanged.",
+      "",
+      "Smallest change: improve the saved views instead.",
+      "",
+      "Requested solution: build the dashboard.",
+    ].join("\n");
+    expect(countListItems(section)).toBe(3);
+  });
+
+  it("counts a bolded label", () => {
+    expect(countListItems("**Do nothing** — costs nothing.\n**Build it** — costs a quarter."))
+      .toBe(2);
+  });
+
+  it("does not count ordinary prose", () => {
+    expect(countListItems("We considered several options and picked the second one.")).toBe(0);
+  });
+});
+
+describe("baselineInstructions", () => {
+  it("tells the baseline to write the file the checks require", () => {
+    const instructions = baselineInstructions({
+      id: "c",
+      prompt: "p",
+      checks: [{ kind: "artifact-exists", path: "architecture.md" }],
+    });
+    expect(instructions).toContain("architecture.md");
+  });
+
+  it("says nothing about what to put in the file", () => {
+    const instructions = baselineInstructions({
+      id: "c",
+      prompt: "p",
+      checks: [
+        { kind: "artifact-has-sections", path: "architecture.md", sections: ["Cost", "Data"] },
+      ],
+    })!;
+    expect(instructions).not.toContain("Cost");
+    expect(instructions).not.toContain("Data");
+  });
+
+  it("returns nothing when no artifact is required", () => {
+    expect(
+      baselineInstructions({ id: "c", prompt: "p", checks: [{ kind: "ran-command" }] }),
+    ).toBeUndefined();
+  });
+});
+
 describe("parseCodexStream", () => {
   const stream = [
     JSON.stringify({ type: "thread.started", thread_id: "t" }),
@@ -298,6 +359,7 @@ function outcome(overrides: Partial<CaseOutcome> = {}): CaseOutcome {
     durationMs: 1,
     transcript: "",
     commands: [],
+    repetition: 0,
     ...overrides,
   };
 }

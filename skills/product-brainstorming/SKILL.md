@@ -17,8 +17,8 @@ answered those, or when the task is a defect fix with a known correct behaviour.
 
 ## Produce this brief
 
-Six sections. Each is short. An empty section is a finding, not a gap to fill
-with plausible text.
+Write it to `product-brief.md`. Six sections, each short. An empty section is a
+finding, not a gap to fill with plausible text.
 
 ### 1. Problem
 What goes wrong today, for whom, how often. Written so someone who disagrees
@@ -50,6 +50,12 @@ it did not. Both must be things you could actually see.
 Ask the smallest number of questions that would change the design, one topic at
 a time. Do not present a questionnaire. When you can answer a question from the
 repository or the conversation, answer it yourself and say what you assumed.
+
+**Asking is not a substitute for the brief.** If nobody answers — because the
+session is non-interactive, or the person is not there — write the brief anyway
+from what you have, and record each unknown as a stated assumption. A question
+left hanging produces nothing; a brief with three explicit assumptions can be
+corrected.
 
 ## Disagreement is part of the job
 
