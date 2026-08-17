@@ -34,10 +34,10 @@ export interface CommandSpec {
 export const COMMANDS: readonly CommandSpec[] = [
   { name: "init", summary: "Install LeanRigor into a detected coding-agent host", implemented: true },
   { name: "doctor", summary: "Diagnose installation, configuration and permissions", implemented: true },
-  { name: "mcp", summary: "Run the context-efficient MCP gateway", implemented: false },
+  { name: "mcp", summary: "Run the context-efficient MCP gateway", implemented: true },
   { name: "benchmark", summary: "Run the quality-adjusted savings benchmark", implemented: true },
-  { name: "report", summary: "Show the local session report and share artifacts", implemented: false },
-  { name: "skills", summary: "List, install and validate verified skills", implemented: false },
+  { name: "report", summary: "Show the local session report and share artifacts", implemented: true },
+  { name: "skills", summary: "List, install and validate verified skills", implemented: true },
   { name: "telemetry", summary: "Inspect and control opt-in aggregate telemetry", implemented: true },
 ];
 
@@ -135,6 +135,45 @@ export async function runCli(argv: string[], io: CliIo = defaultIo): Promise<num
         ...(typeof flags.json === "string" ? { json: flags.json } : {}),
         ...(typeof flags.markdown === "string" ? { markdown: flags.markdown } : {}),
         conformancePassed: flagAsBoolean(flags["conformance-passed"]),
+      });
+    }
+    case "mcp": {
+      const { positionals } = parseFlags(rest);
+      if ((positionals[0] ?? "serve") !== "serve") {
+        io.err(`LR_UNKNOWN_COMMAND: unknown mcp action "${positionals[0]}". Valid action: serve.`);
+        return EXIT_UNAVAILABLE;
+      }
+      const { runMcpServe } = await import("./commands/mcp.js");
+      return runMcpServe(io, {
+        ...(typeof flags.project === "string" ? { projectDir: flags.project } : {}),
+        ...(flags.http !== undefined ? { transport: "http" as const } : {}),
+        ...(typeof flags.port === "string" ? { port: Number(flags.port) } : {}),
+      });
+    }
+    case "skills": {
+      const { runSkills } = await import("./commands/skills.js");
+      const { positionals } = parseFlags(rest);
+      return runSkills(positionals, io, {
+        ...(typeof flags.project === "string" ? { projectDir: flags.project } : {}),
+        ...(typeof flags.home === "string" ? { homeDir: flags.home } : {}),
+      });
+    }
+    case "report": {
+      const { runReport } = await import("./commands/report.js");
+      const projectDir = typeof flags.project === "string" ? flags.project : process.cwd();
+      return runReport(io, {
+        dataDir:
+          typeof flags["data-dir"] === "string"
+            ? flags["data-dir"]
+            : path.join(projectDir, ".leanrigor"),
+        ...(typeof flags.session === "string" ? { sessionId: flags.session } : {}),
+        ...(typeof flags.share === "string"
+          ? { share: flags.share }
+          : flagAsBoolean(flags.share)
+            ? { share: path.join(projectDir, ".leanrigor", "share.svg") }
+            : {}),
+        json: flagAsBoolean(flags.json),
+        energy: flagAsBoolean(flags.energy),
       });
     }
     case "telemetry": {

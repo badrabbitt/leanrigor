@@ -35,6 +35,9 @@
     },
     {
       "path": "../benchmark"
+    },
+    {
+      "path": "../energy-estimator"
     }
   ]
 }
