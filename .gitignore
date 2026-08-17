@@ -10,3 +10,5 @@ coverage/
 !.env.example
 .leanrigor/
 tmp/
+packages/cli/skills/
+packages/cli/dist-types/

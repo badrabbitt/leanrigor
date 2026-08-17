@@ -19,12 +19,12 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     }
   },
   "files": [
     "dist",
+    "skills",
     "README.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md"
@@ -33,14 +33,14 @@
     "node": ">=22"
   },
   "scripts": {
-    "build": "tsc --build",
-    "test": "vitest run"
+    "build": "node build.mjs",
+    "test": "vitest run",
+    "prepack": "node build.mjs"
   },
   "devDependencies": {
-    "vitest": "^3.2.4"
-  },
-  "dependencies": {
+    "@leanrigor/benchmark": "0.1.0",
     "@leanrigor/core": "0.1.0",
+    "@leanrigor/energy-estimator": "0.1.0",
     "@leanrigor/host-claude": "0.1.0",
     "@leanrigor/host-codex": "0.1.0",
     "@leanrigor/mcp-gateway": "0.1.0",
@@ -48,8 +48,22 @@
     "@leanrigor/skill-router": "0.1.0",
     "@leanrigor/tokenleaf": "0.1.0",
     "@leanrigor/workflow-runtime": "0.1.0",
-    "@leanrigor/benchmark": "0.1.0",
+    "esbuild": "^0.25.12",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.22.0",
+    "gpt-tokenizer": "^3.0.1",
+    "smol-toml": "^1.4.2",
     "yaml": "^2.8.1",
-    "@leanrigor/energy-estimator": "0.1.0"
+    "zod": "^4.1.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/badrabbitt/leanrigor.git"
+  },
+  "homepage": "https://github.com/badrabbitt/leanrigor#readme",
+  "bugs": {
+    "url": "https://github.com/badrabbitt/leanrigor/issues"
   }
 }

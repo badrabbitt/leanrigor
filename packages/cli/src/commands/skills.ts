@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { cp, mkdir, stat } from "node:fs/promises";
 import { homedir } from "node:os";
 import path from "node:path";
@@ -17,9 +18,16 @@ export interface SkillsOptions {
 function bundledSkillsRoot(options: SkillsOptions): string {
   if (options.bundledRoot) return options.bundledRoot;
   const here = path.dirname(fileURLToPath(import.meta.url));
-  // Resolves from both `src/commands` in tests and `dist` in the published
-  // package, where `skills/` sits beside the compiled output.
-  return path.resolve(here, "..", "..", "..", "..", "skills");
+  // Resolves from `src/commands` during development and from `dist/` in the
+  // published package, where `skills/` sits beside the compiled bundle.
+  for (const candidate of [
+    path.resolve(here, "..", "skills"),
+    path.resolve(here, "..", "..", "skills"),
+    path.resolve(here, "..", "..", "..", "..", "skills"),
+  ]) {
+    if (existsSync(path.join(candidate, "verification", "SKILL.md"))) return candidate;
+  }
+  return path.resolve(here, "..", "skills");
 }
 
 function installRoots(options: SkillsOptions): string[] {

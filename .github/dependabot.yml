@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # One PR for routine patch bumps keeps review attention on the changes
+      # that actually matter.
+      patch-updates:
+        update-types: [patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # Actions are pinned to commit SHAs; Dependabot keeps the pins current
+    # rather than the project drifting onto a mutable tag.

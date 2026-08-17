@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      dist_tag:
+        description: 'npm dist-tag to publish under'
+        required: true
+        default: next
+        type: choice
+        options: [next, latest]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: verify before publishing
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: ['22', '24']
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  gate:
+    name: quality gate
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run conformance
+      - name: Release gate
+        run: node packages/cli/dist/bin.js benchmark --conformance-passed
+
+  publish:
+    name: publish
+    needs: gate
+    runs-on: ubuntu-latest
+    # A protected environment, so publishing requires a human approval step
+    # configured in the repository settings.
+    environment: npm-publish
+    permissions:
+      contents: read
+      # OIDC trusted publishing: no long-lived npm token is stored anywhere.
+      id-token: write
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: '22'
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run build
+      - name: Inspect the tarball one last time
+        run: npm pack --workspace packages/cli --dry-run
+      - name: Publish with provenance
+        run: npm publish --workspace packages/cli --provenance --access public --tag ${{ inputs.dist_tag }}
