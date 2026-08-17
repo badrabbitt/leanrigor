@@ -13,7 +13,7 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --build && node packages/cli/build.mjs",
     "typecheck": "tsc --build --force",
     "test": "vitest run",
     "test:watch": "vitest",
