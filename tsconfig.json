@@ -14,6 +14,9 @@
       "path": "packages/mcp-gateway"
     },
     {
+      "path": "packages/workflow-runtime"
+    },
+    {
       "path": "packages/cli"
     }
   ]
