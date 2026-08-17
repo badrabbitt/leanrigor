@@ -8,6 +8,9 @@
       "path": "packages/tokenleaf-engine"
     },
     {
+      "path": "packages/result-store"
+    },
+    {
       "path": "packages/cli"
     }
   ]
