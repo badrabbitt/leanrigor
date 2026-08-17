@@ -35,7 +35,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "init", summary: "Install LeanRigor into a detected coding-agent host", implemented: true },
   { name: "doctor", summary: "Diagnose installation, configuration and permissions", implemented: true },
   { name: "mcp", summary: "Run the context-efficient MCP gateway", implemented: false },
-  { name: "benchmark", summary: "Run the quality-adjusted savings benchmark", implemented: false },
+  { name: "benchmark", summary: "Run the quality-adjusted savings benchmark", implemented: true },
   { name: "report", summary: "Show the local session report and share artifacts", implemented: false },
   { name: "skills", summary: "List, install and validate verified skills", implemented: false },
   { name: "telemetry", summary: "Inspect and control opt-in aggregate telemetry", implemented: true },
@@ -125,6 +125,16 @@ export async function runCli(argv: string[], io: CliIo = defaultIo): Promise<num
       return runDoctor(io, {
         ...(typeof flags.project === "string" ? { projectDir: flags.project } : {}),
         ...(typeof flags.home === "string" ? { homeDir: flags.home } : {}),
+      });
+    }
+    case "benchmark": {
+      const { runBenchmark } = await import("./commands/benchmark.js");
+      return runBenchmark(io, {
+        ...(typeof flags.evals === "string" ? { evalsRoot: flags.evals } : {}),
+        ...(typeof flags.suite === "string" ? { suite: flags.suite } : {}),
+        ...(typeof flags.json === "string" ? { json: flags.json } : {}),
+        ...(typeof flags.markdown === "string" ? { markdown: flags.markdown } : {}),
+        conformancePassed: flagAsBoolean(flags["conformance-passed"]),
       });
     }
     case "telemetry": {

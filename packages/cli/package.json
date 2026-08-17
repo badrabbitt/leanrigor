@@ -47,6 +47,8 @@
     "@leanrigor/result-store": "0.1.0",
     "@leanrigor/skill-router": "0.1.0",
     "@leanrigor/tokenleaf": "0.1.0",
-    "@leanrigor/workflow-runtime": "0.1.0"
+    "@leanrigor/workflow-runtime": "0.1.0",
+    "@leanrigor/benchmark": "0.1.0",
+    "yaml": "^2.8.1"
   }
 }

@@ -29,6 +29,9 @@
       "path": "packages/energy-estimator"
     },
     {
+      "path": "packages/benchmark"
+    },
+    {
       "path": "packages/cli"
     },
     {

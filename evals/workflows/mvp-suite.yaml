@@ -1,0 +1,64 @@
+# The MVP benchmark suite.
+#
+# Every case here is deterministic: no model is involved, so the numbers are
+# reproducible on any machine. That is the point — a benchmark nobody else can
+# re-run is marketing, not evidence.
+#
+# Run it with:
+#   npx leanrigor benchmark
+
+schema_version: 1
+suite: mvp
+
+cases:
+  - id: json-github-issues
+    description: A 480 KiB GitHub issues response, the archetypal oversized tool result.
+    kind: json
+    fixture: context/github-issues.json
+
+  - id: json-repo-search
+    description: Repository search hits, where only the top matches are ever read.
+    kind: json
+    fixture: context/repo-search.json
+
+  - id: log-npm-install
+    description: An install log dominated by repetition, with one real error in it.
+    kind: log
+    fixture: context/npm-install.log
+
+  - id: log-vitest-run
+    description: A test run where 500 passing lines bury one failure.
+    kind: log
+    fixture: context/vitest-run.log
+
+  - id: diff-service
+    description: A 200-line diff carrying a single meaningful change.
+    kind: diff
+    fixture: context/service-diff.txt
+
+  - id: catalog-10-tools
+    description: A small MCP catalog, where deferring schemas should save little.
+    kind: tool-catalog
+    toolCount: 10
+
+  - id: catalog-50-tools
+    description: A mid-sized MCP catalog.
+    kind: tool-catalog
+    toolCount: 50
+
+  - id: catalog-200-tools
+    description: A large MCP catalog, the case that motivates tool search.
+    kind: tool-catalog
+    toolCount: 200
+
+conditions:
+  - baseline
+  - gateway
+
+notes: |
+  The `gateway+workflow` and `gateway+workflow+skill` conditions from the design
+  document are not in this suite yet: they require a host and model credentials,
+  and running them is what turns the skill uplift claims in evals/README.md from
+  unverified into evidence. Until then this suite measures exactly one thing —
+  what LeanRigor's own deterministic transformations do to a payload — and the
+  release gate refuses any savings claim that a comparison did not produce.

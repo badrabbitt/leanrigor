@@ -53,8 +53,11 @@ describe("leanrigor CLI", () => {
   });
 
   it("returns exit code 2 and a stable error code for a known but unimplemented command", async () => {
+    const { COMMANDS } = await import("../src/cli.js");
+    const pending = COMMANDS.find((spec) => !spec.implemented);
+    if (!pending) return;
     const { lines, io } = capture();
-    await expect(runCli(["benchmark"], io)).resolves.toBe(2);
+    await expect(runCli([pending.name], io)).resolves.toBe(2);
     expect(lines.join("\n")).toContain("LR_NOT_IMPLEMENTED");
   });
 
