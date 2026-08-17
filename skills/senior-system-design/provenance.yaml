@@ -1,0 +1,18 @@
+artifact: skills/senior-system-design
+implementation: independently-authored
+influences:
+  - source: AWS Builders' Library
+    use: research-only
+    concepts: [timeouts, retries-with-backoff-and-jitter, retry-budget, load-shedding]
+  - source: Google SRE books
+    use: research-only
+    concepts: [sli-slo, error-budget, symptom-based-alerting]
+  - source: Azure Architecture Center
+    use: research-only
+    concepts: [architecture-styles, reliability-patterns]
+  - project: obra/superpowers
+    license: MIT
+    use: research-only
+    concepts: [design-gate]
+copied_files: []
+reviewed_by: maintainer

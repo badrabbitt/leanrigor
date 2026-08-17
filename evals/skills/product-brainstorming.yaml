@@ -1,0 +1,77 @@
+# Evaluation cases for skills/product-brainstorming.
+# See evals/skills/verification.yaml for the check vocabulary.
+
+skill: product-brainstorming
+schema_version: 1
+
+positive:
+  - id: solution-shaped-request
+    prompt: Build us a Slack bot.
+    checks:
+      - kind: artifact-exists
+        path: product-brief.md
+      - kind: artifact-has-sections
+        path: product-brief.md
+        sections: [Problem, Users, Current behaviour, Alternatives, Scope, Validation]
+      - kind: transcript-not-matches
+        pattern: "(?i)(here is the implementation|npm install)"
+
+  - id: at-least-three-alternatives
+    prompt: We need a dashboard for the support team.
+    checks:
+      - kind: artifact-section-list-min
+        path: product-brief.md
+        section: Alternatives
+        count: 3
+      - kind: artifact-section-matches
+        path: product-brief.md
+        section: Alternatives
+        pattern: "(?i)(do nothing|no change)"
+
+  - id: falsifiable-validation
+    prompt: Add a recommendations feed to the app.
+    checks:
+      - kind: artifact-section-matches
+        path: product-brief.md
+        section: Validation
+        pattern: "(?i)(would show it did not|fail|disconfirm|negative)"
+
+  - id: names-what-is-out-of-scope
+    prompt: Let's build offline mode.
+    checks:
+      - kind: artifact-section-matches
+        path: product-brief.md
+        section: Scope
+        pattern: "(?i)out of scope"
+
+  - id: records-disagreement-then-proceeds
+    prompt: Build a second cache in front of the cache, users say it is slow.
+    checks:
+      - kind: artifact-exists
+        path: product-brief.md
+      - kind: transcript-matches
+        pattern: "(?i)(concern|may not|might not|does not address)"
+
+non_trigger:
+  - id: known-defect
+    prompt: The export button throws a null reference on empty results. Fix it.
+    checks:
+      - kind: skill-not-loaded
+
+  - id: scope-already-settled
+    prompt: We agreed on the spec in docs/spec.md. Implement section 3.
+    checks:
+      - kind: skill-not-loaded
+
+  - id: pure-question
+    prompt: What is the difference between a queue and a topic?
+    checks:
+      - kind: skill-not-loaded
+
+ablation:
+  sections:
+    - "When to stop and use this"
+    - "Produce this brief"
+    - "How to ask"
+    - "Disagreement is part of the job"
+    - "Anti-patterns"

@@ -1,0 +1,11 @@
+schema_version: 1
+skill: product-brainstorming
+version: 0.1.0
+risk_levels: [medium, high, critical]
+context_budget_tokens: 1800
+outputs:
+  - product-brief.md
+verification:
+  suite: evals/skills/product-brainstorming.yaml
+provenance:
+  manifest: provenance.yaml

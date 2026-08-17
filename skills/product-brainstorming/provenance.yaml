@@ -1,0 +1,12 @@
+artifact: skills/product-brainstorming
+implementation: independently-authored
+influences:
+  - project: obra/superpowers
+    license: MIT
+    use: research-only
+    concepts: [brainstorm-before-implementation]
+  - source: Anthropic — Building Effective Agents
+    use: research-only
+    concepts: [workflow-versus-agent, simple-composable-patterns]
+copied_files: []
+reviewed_by: maintainer

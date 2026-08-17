@@ -1,0 +1,12 @@
+artifact: skills/verification
+implementation: independently-authored
+influences:
+  - project: obra/superpowers
+    license: MIT
+    use: research-only
+    concepts: [verification-before-completion, evidence-before-assertion]
+  - source: Anthropic — Demystifying Evals for AI Agents
+    use: research-only
+    concepts: [deterministic-checks, multi-turn-evaluation]
+copied_files: []
+reviewed_by: maintainer

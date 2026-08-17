@@ -1,0 +1,13 @@
+schema_version: 1
+skill: verification
+version: 0.1.0
+# Verification applies at every risk level: it is the one gate LeanRigor never
+# drops, so the skill must be routable even for a trivial task.
+risk_levels: [trivial, low, medium, high, critical]
+context_budget_tokens: 1200
+outputs:
+  - verification-evidence
+verification:
+  suite: evals/skills/verification.yaml
+provenance:
+  manifest: provenance.yaml

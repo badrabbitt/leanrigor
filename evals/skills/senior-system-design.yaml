@@ -1,0 +1,110 @@
+# Evaluation cases for skills/senior-system-design.
+# See evals/skills/verification.yaml for the check vocabulary.
+
+skill: senior-system-design
+schema_version: 1
+
+positive:
+  - id: url-shortener-at-scale
+    prompt: Design a URL shortener for 50k redirects per second.
+    checks:
+      - kind: artifact-exists
+        path: architecture.md
+      - kind: artifact-has-sections
+        path: architecture.md
+        sections:
+          - Functional requirements
+          - Non-functional requirements
+          - Capacity assumptions
+          - Data
+          - Failure modes
+          - Security boundaries
+          - Observability
+          - Cost
+          - Rollout and rollback
+      - kind: artifact-section-matches
+        path: architecture.md
+        section: Non-functional requirements
+        pattern: "p(50|95|99)"
+
+  - id: capacity-shows-arithmetic
+    prompt: Design an event ingestion pipeline for 2 billion events per day.
+    checks:
+      - kind: artifact-section-matches
+        path: architecture.md
+        section: Capacity assumptions
+        pattern: "[0-9][0-9,.]*\\s*(GB|TB|MB|KB|rps|/s|per second|per day)"
+      - kind: artifact-section-matches
+        path: architecture.md
+        section: Capacity assumptions
+        pattern: "(?i)(measured|estimated|assumed)"
+
+  - id: failure-modes-name-retry-budget
+    prompt: Design the payment reconciliation service.
+    checks:
+      - kind: artifact-section-matches
+        path: architecture.md
+        section: Failure modes
+        pattern: "(?i)(timeout)"
+      - kind: artifact-section-matches
+        path: architecture.md
+        section: Failure modes
+        pattern: "(?i)(retry budget|backoff|jitter|idempoten)"
+
+  - id: alerts-on-symptoms
+    prompt: Design the notification fan-out service.
+    checks:
+      - kind: artifact-section-matches
+        path: architecture.md
+        section: Observability
+        pattern: "(?i)(sli|slo|error rate|latency|user-visible|symptom)"
+
+  - id: rollback-step-is-concrete
+    prompt: Design the migration from the single database to per-tenant databases.
+    checks:
+      - kind: artifact-section-matches
+        path: architecture.md
+        section: Rollout and rollback
+        pattern: "(?i)(rollback|revert|roll back)"
+      - kind: artifact-section-matches
+        path: architecture.md
+        section: Rollout and rollback
+        pattern: "(?i)(flag|toggle|dual[- ]write|backfill|order)"
+
+  - id: chooses-between-options
+    prompt: Should the job runner use a queue or a scheduler? Design it.
+    checks:
+      - kind: artifact-matches
+        path: architecture.md
+        pattern: "(?i)(option|alternative)"
+      - kind: artifact-matches
+        path: architecture.md
+        pattern: "(?i)(chosen|we pick|decision|because)"
+
+non_trigger:
+  - id: rename-a-variable
+    prompt: Rename `cfg` to `config` in this file.
+    checks:
+      - kind: skill-not-loaded
+
+  - id: fix-a-typo
+    prompt: Fix the typo in the README heading.
+    checks:
+      - kind: skill-not-loaded
+
+  - id: explain-existing-code
+    prompt: Explain what this reducer does.
+    checks:
+      - kind: skill-not-loaded
+
+ablation:
+  sections:
+    - "Non-functional requirements"
+    - "Capacity assumptions"
+    - "Failure modes"
+    - "Security boundaries"
+    - "Observability"
+    - "Cost"
+    - "Rollout and rollback"
+    - "Choosing between options"
+    - "Anti-patterns"
