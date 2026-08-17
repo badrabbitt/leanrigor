@@ -20,6 +20,12 @@
       "path": "packages/skill-router"
     },
     {
+      "path": "packages/host-claude"
+    },
+    {
+      "path": "packages/host-codex"
+    },
+    {
       "path": "packages/cli"
     }
   ]

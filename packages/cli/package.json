@@ -38,5 +38,15 @@
   },
   "devDependencies": {
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@leanrigor/core": "0.1.0",
+    "@leanrigor/host-claude": "0.1.0",
+    "@leanrigor/host-codex": "0.1.0",
+    "@leanrigor/mcp-gateway": "0.1.0",
+    "@leanrigor/result-store": "0.1.0",
+    "@leanrigor/skill-router": "0.1.0",
+    "@leanrigor/tokenleaf": "0.1.0",
+    "@leanrigor/workflow-runtime": "0.1.0"
   }
 }

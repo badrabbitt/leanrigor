@@ -33,3 +33,15 @@ export type { LeanRigorConfig, UpstreamServer } from "./config.js";
 
 export { LeanRigorError, isLeanRigorError, ERROR_CODES } from "./errors.js";
 export type { ErrorCode, LeanRigorErrorOptions } from "./errors.js";
+
+export { BACKUP_SUFFIX, AUDIT_FILE } from "./host.js";
+export type {
+  HostAdapter,
+  HostDetection,
+  HostCapability,
+  FileChange,
+  FileChangeKind,
+  InstallPlan,
+  InstallResult,
+  UninstallResult,
+} from "./host.js";

@@ -59,10 +59,21 @@ describe("leanrigor CLI", () => {
   });
 
   it("never exits zero merely because a subcommand is recognized", async () => {
-    for (const command of ["init", "doctor", "mcp", "report", "skills", "telemetry"]) {
-      const { io } = capture();
-      const code = await runCli([command], io);
-      expect(code).not.toBe(0);
+    const { COMMANDS } = await import("../src/cli.js");
+    for (const command of COMMANDS.filter((spec) => !spec.implemented)) {
+      const { lines, io } = capture();
+      const code = await runCli([command.name], io);
+      expect(code, command.name).toBe(2);
+      expect(lines.join("\n")).toContain("LR_NOT_IMPLEMENTED");
     }
+  });
+
+  it("keeps at least one command still unimplemented, and says so honestly", async () => {
+    const { COMMANDS } = await import("../src/cli.js");
+    const pending = COMMANDS.filter((spec) => !spec.implemented);
+    if (pending.length === 0) return;
+    const { lines, io } = capture();
+    await runCli(["help"], io);
+    expect(lines.join("\n")).toContain("not implemented yet");
   });
 });

@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { flagAsBoolean, flagAsList, parseFlags } from "./flags.js";
 
 /** Sink for user-visible output, injected so tests never capture the real console. */
 export interface CliIo {
@@ -31,8 +32,8 @@ export interface CommandSpec {
 }
 
 export const COMMANDS: readonly CommandSpec[] = [
-  { name: "init", summary: "Install LeanRigor into a detected coding-agent host", implemented: false },
-  { name: "doctor", summary: "Diagnose installation, configuration and permissions", implemented: false },
+  { name: "init", summary: "Install LeanRigor into a detected coding-agent host", implemented: true },
+  { name: "doctor", summary: "Diagnose installation, configuration and permissions", implemented: true },
   { name: "mcp", summary: "Run the context-efficient MCP gateway", implemented: false },
   { name: "benchmark", summary: "Run the quality-adjusted savings benchmark", implemented: false },
   { name: "report", summary: "Show the local session report and share artifacts", implemented: false },
@@ -101,7 +102,33 @@ export async function runCli(argv: string[], io: CliIo = defaultIo): Promise<num
     return EXIT_UNAVAILABLE;
   }
 
-  void rest;
-  io.err(`LR_NOT_IMPLEMENTED: "${command.name}" has no dispatcher yet.`);
-  return EXIT_UNAVAILABLE;
+  const { flags } = parseFlags(rest);
+
+  switch (command.name) {
+    case "init": {
+      const { runInit, runUninstall } = await import("./commands/init.js");
+      const options = {
+        ...(typeof flags.project === "string" ? { projectDir: flags.project } : {}),
+        ...(typeof flags.home === "string" ? { homeDir: flags.home } : {}),
+        ...(flagAsList(flags.host) ? { hosts: flagAsList(flags.host)! } : {}),
+      };
+      return flagAsBoolean(flags.uninstall)
+        ? runUninstall(io, options)
+        : runInit(io, {
+            ...options,
+            yes: flagAsBoolean(flags.yes),
+            dryRun: flagAsBoolean(flags["dry-run"]),
+          });
+    }
+    case "doctor": {
+      const { runDoctor } = await import("./commands/doctor.js");
+      return runDoctor(io, {
+        ...(typeof flags.project === "string" ? { projectDir: flags.project } : {}),
+        ...(typeof flags.home === "string" ? { homeDir: flags.home } : {}),
+      });
+    }
+    default:
+      io.err(`LR_NOT_IMPLEMENTED: "${command.name}" has no dispatcher yet.`);
+      return EXIT_UNAVAILABLE;
+  }
 }

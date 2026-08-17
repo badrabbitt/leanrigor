@@ -5,5 +5,33 @@
     "outDir": "dist",
     "tsBuildInfoFile": ".tsbuildinfo"
   },
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../host-claude"
+    },
+    {
+      "path": "../host-codex"
+    },
+    {
+      "path": "../mcp-gateway"
+    },
+    {
+      "path": "../result-store"
+    },
+    {
+      "path": "../skill-router"
+    },
+    {
+      "path": "../tokenleaf-engine"
+    },
+    {
+      "path": "../workflow-runtime"
+    }
+  ]
 }
