@@ -38,7 +38,7 @@ export const COMMANDS: readonly CommandSpec[] = [
   { name: "benchmark", summary: "Run the quality-adjusted savings benchmark", implemented: false },
   { name: "report", summary: "Show the local session report and share artifacts", implemented: false },
   { name: "skills", summary: "List, install and validate verified skills", implemented: false },
-  { name: "telemetry", summary: "Inspect and control opt-in aggregate telemetry", implemented: false },
+  { name: "telemetry", summary: "Inspect and control opt-in aggregate telemetry", implemented: true },
 ];
 
 function packageVersion(): string {
@@ -125,6 +125,18 @@ export async function runCli(argv: string[], io: CliIo = defaultIo): Promise<num
       return runDoctor(io, {
         ...(typeof flags.project === "string" ? { projectDir: flags.project } : {}),
         ...(typeof flags.home === "string" ? { homeDir: flags.home } : {}),
+      });
+    }
+    case "telemetry": {
+      const { runTelemetry } = await import("./commands/telemetry.js");
+      const { positionals } = parseFlags(rest);
+      const projectDir = typeof flags.project === "string" ? flags.project : process.cwd();
+      return runTelemetry(positionals[0] ?? "status", io, {
+        dataDir:
+          typeof flags["data-dir"] === "string"
+            ? flags["data-dir"]
+            : path.join(projectDir, ".leanrigor"),
+        ...(typeof flags.endpoint === "string" ? { endpoint: flags.endpoint } : {}),
       });
     }
     default:

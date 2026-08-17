@@ -1,0 +1,17 @@
+{
+  "name": "@leanrigor/telemetry-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Optional aggregate telemetry collector",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
+  "files": ["dist"],
+  "engines": { "node": ">=22" },
+  "scripts": { "build": "tsc --build", "test": "vitest run" },
+  "dependencies": {
+    "@leanrigor/core": "0.1.0",
+    "hono": "^4.11.4",
+    "zod": "^4.1.12"
+  }
+}
