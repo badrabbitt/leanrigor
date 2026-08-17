@@ -8,3 +8,4 @@ export type {
 export { handleFor, assertHandle, hashOf, HANDLE_PREFIX } from "./handle.js";
 export { DEFAULT_RETENTION, planEviction } from "./retention.js";
 export type { RetentionPolicy, GcResult, RetainedItem } from "./retention.js";
+export * from "./projectors/index.js";
