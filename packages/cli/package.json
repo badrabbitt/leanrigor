@@ -49,7 +49,7 @@
     "@leanrigor/tokenleaf": "0.1.0",
     "@leanrigor/workflow-runtime": "0.1.0",
     "esbuild": "^0.25.12",
-    "vitest": "^3.2.4"
+    "vitest": "^4.1.10"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.22.0",
