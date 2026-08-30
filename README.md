@@ -86,7 +86,7 @@ skills, is in [docs/benchmarks/skill-eval.md](docs/benchmarks/skill-eval.md).
 |---|---|
 | Claude Code | supported |
 | Codex | supported |
-| Gemini CLI | not yet; adapter planned |
+| Gemini CLI | supported |
 
 `leanrigor init` detects what is installed, **previews every file change**, backs
 up anything it modifies, and never writes before you confirm.
@@ -140,7 +140,6 @@ Stated plainly, because a harness that overstates itself is worse than none:
   and will over-classify before it under-classifies, but it is not clever.
 - The Codex adapter rewrites `config.toml`, which drops TOML comments. The
   install plan warns about this and the original is backed up.
-- No Gemini CLI adapter yet.
 - The published package bundles the internal `@leanrigor/*` workspaces; those
   APIs are not stable and are not published separately.
 

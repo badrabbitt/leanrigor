@@ -26,6 +26,9 @@
       "path": "packages/host-codex"
     },
     {
+      "path": "packages/host-gemini"
+    },
+    {
       "path": "packages/energy-estimator"
     },
     {

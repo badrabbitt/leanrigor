@@ -3,6 +3,7 @@ import path from "node:path";
 import type { HostAdapter, InstallPlan } from "@leanrigor/core";
 import { ClaudeCodeAdapter } from "@leanrigor/host-claude";
 import { CodexAdapter } from "@leanrigor/host-codex";
+import { GeminiAdapter } from "@leanrigor/host-gemini";
 import type { CliIo } from "../cli.js";
 import { EXIT_FAILURE, EXIT_OK, EXIT_UNAVAILABLE } from "../cli.js";
 
@@ -22,6 +23,7 @@ export function buildAdapters(projectDir: string, homeDir: string): HostAdapter[
   return [
     new ClaudeCodeAdapter({ projectDir, homeDir }),
     new CodexAdapter({ codexDir: path.join(homeDir, ".codex"), projectDir }),
+    new GeminiAdapter({ geminiDir: path.join(homeDir, ".gemini"), projectDir }),
   ];
 }
 
@@ -68,7 +70,7 @@ export async function runInit(io: CliIo, options: InitOptions = {}): Promise<num
 
   if (found.length === 0) {
     io.err("LR_HOST_NOT_DETECTED: no supported coding-agent host was found.");
-    io.err("Supported hosts: claude-code, codex.");
+    io.err("Supported hosts: claude-code, codex, gemini.");
     return EXIT_UNAVAILABLE;
   }
 
