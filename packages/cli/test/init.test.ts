@@ -26,6 +26,7 @@ afterEach(async () => {
 });
 
 const withClaude = async () => mkdir(path.join(home, ".claude"), { recursive: true });
+const withGemini = async () => mkdir(path.join(home, ".gemini"), { recursive: true });
 
 async function tree(dir: string): Promise<string[]> {
   const out: string[] = [];
@@ -119,6 +120,19 @@ describe("init", () => {
       await runInit(io, { projectDir: project, homeDir: home, hosts: ["claude-code"], yes: true }),
     ).toBe(0);
     const config = JSON.parse(await readFile(path.join(project, ".mcp.json"), "utf8")) as {
+      mcpServers: Record<string, unknown>;
+    };
+    expect(config.mcpServers).toHaveProperty("leanrigor");
+  });
+
+  it("installs into Gemini user settings when Gemini is detected", async () => {
+    await withGemini();
+    const { io } = capture();
+    expect(await runInit(io, { projectDir: project, homeDir: home, hosts: ["gemini"], yes: true }))
+      .toBe(0);
+    const config = JSON.parse(
+      await readFile(path.join(home, ".gemini", "settings.json"), "utf8"),
+    ) as {
       mcpServers: Record<string, unknown>;
     };
     expect(config.mcpServers).toHaveProperty("leanrigor");

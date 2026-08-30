@@ -20,6 +20,9 @@
       "path": "../host-codex"
     },
     {
+      "path": "../host-gemini"
+    },
+    {
       "path": "../mcp-gateway"
     },
     {
